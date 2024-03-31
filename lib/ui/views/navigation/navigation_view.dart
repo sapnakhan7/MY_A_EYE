@@ -1,4 +1,6 @@
-import 'package:a_eye/ui/views/object_detection/object_detection_view.dart';
+import 'package:a_eye/ui/views/currency_recognition/currency_recognition_view.dart';
+import 'package:a_eye/ui/views/navigation/Components/face_recognition.dart';
+import 'package:a_eye/ui/views/navigation/Components/object_detection.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:stacked/stacked.dart';
@@ -49,12 +51,12 @@ class NavigationView extends StackedView<NavigationViewModel> {
             ],
           ),
         ),
-        body: TabBarView(
-          physics: const BouncingScrollPhysics(),
+        body: const TabBarView(
+          physics: BouncingScrollPhysics(),
           children: [
-            const ObjectDetectionView(),
-            Container(),
-            Container(),
+            Obj(),
+            CurrencyRecognitionView(),
+            FaceRcg(),
           ],
         ),
       ),

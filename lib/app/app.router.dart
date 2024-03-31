@@ -5,15 +5,20 @@
 // **************************************************************************
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
+import 'package:a_eye/ui/views/currency_recognition/components/take_picture/take_picture_view.dart'
+    as _i7;
+import 'package:a_eye/ui/views/currency_recognition/currency_recognition_view.dart'
+    as _i6;
 import 'package:a_eye/ui/views/home/home_view.dart' as _i2;
 import 'package:a_eye/ui/views/navigation/navigation_view.dart' as _i4;
 import 'package:a_eye/ui/views/object_detection/object_detection_view.dart'
     as _i5;
 import 'package:a_eye/ui/views/startup/startup_view.dart' as _i3;
-import 'package:flutter/material.dart' as _i6;
+import 'package:camera/camera.dart' as _i9;
+import 'package:flutter/material.dart' as _i8;
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart' as _i1;
-import 'package:stacked_services/stacked_services.dart' as _i7;
+import 'package:stacked_services/stacked_services.dart' as _i10;
 
 class Routes {
   static const homeView = '/home-view';
@@ -24,11 +29,17 @@ class Routes {
 
   static const objectDetectionView = '/object-detection-view';
 
+  static const currencyRecognitionView = '/currency-recognition-view';
+
+  static const takePictureView = '/take-picture-view';
+
   static const all = <String>{
     homeView,
     startupView,
     navigationView,
     objectDetectionView,
+    currencyRecognitionView,
+    takePictureView,
   };
 }
 
@@ -50,30 +61,51 @@ class StackedRouter extends _i1.RouterBase {
       Routes.objectDetectionView,
       page: _i5.ObjectDetectionView,
     ),
+    _i1.RouteDef(
+      Routes.currencyRecognitionView,
+      page: _i6.CurrencyRecognitionView,
+    ),
+    _i1.RouteDef(
+      Routes.takePictureView,
+      page: _i7.TakePictureView,
+    ),
   ];
 
   final _pagesMap = <Type, _i1.StackedRouteFactory>{
     _i2.HomeView: (data) {
-      return _i6.MaterialPageRoute<dynamic>(
+      return _i8.MaterialPageRoute<dynamic>(
         builder: (context) => const _i2.HomeView(),
         settings: data,
       );
     },
     _i3.StartupView: (data) {
-      return _i6.MaterialPageRoute<dynamic>(
+      return _i8.MaterialPageRoute<dynamic>(
         builder: (context) => const _i3.StartupView(),
         settings: data,
       );
     },
     _i4.NavigationView: (data) {
-      return _i6.MaterialPageRoute<dynamic>(
+      return _i8.MaterialPageRoute<dynamic>(
         builder: (context) => const _i4.NavigationView(),
         settings: data,
       );
     },
     _i5.ObjectDetectionView: (data) {
-      return _i6.MaterialPageRoute<dynamic>(
+      return _i8.MaterialPageRoute<dynamic>(
         builder: (context) => const _i5.ObjectDetectionView(),
+        settings: data,
+      );
+    },
+    _i6.CurrencyRecognitionView: (data) {
+      return _i8.MaterialPageRoute<dynamic>(
+        builder: (context) => const _i6.CurrencyRecognitionView(),
+        settings: data,
+      );
+    },
+    _i7.TakePictureView: (data) {
+      final args = data.getArgs<TakePictureViewArguments>(nullOk: false);
+      return _i8.MaterialPageRoute<dynamic>(
+        builder: (context) => _i7.TakePictureView(args.camera, key: args.key),
         settings: data,
       );
     },
@@ -86,7 +118,34 @@ class StackedRouter extends _i1.RouterBase {
   Map<Type, _i1.StackedRouteFactory> get pagesMap => _pagesMap;
 }
 
-extension NavigatorStateExtension on _i7.NavigationService {
+class TakePictureViewArguments {
+  const TakePictureViewArguments({
+    required this.camera,
+    this.key,
+  });
+
+  final _i9.CameraDescription camera;
+
+  final _i8.Key? key;
+
+  @override
+  String toString() {
+    return '{"camera": "$camera", "key": "$key"}';
+  }
+
+  @override
+  bool operator ==(covariant TakePictureViewArguments other) {
+    if (identical(this, other)) return true;
+    return other.camera == camera && other.key == key;
+  }
+
+  @override
+  int get hashCode {
+    return camera.hashCode ^ key.hashCode;
+  }
+}
+
+extension NavigatorStateExtension on _i10.NavigationService {
   Future<dynamic> navigateToHomeView([
     int? routerId,
     bool preventDuplicates = true,
@@ -143,6 +202,37 @@ extension NavigatorStateExtension on _i7.NavigationService {
         transition: transition);
   }
 
+  Future<dynamic> navigateToCurrencyRecognitionView([
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  ]) async {
+    return navigateTo<dynamic>(Routes.currencyRecognitionView,
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> navigateToTakePictureView({
+    required _i9.CameraDescription camera,
+    _i8.Key? key,
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  }) async {
+    return navigateTo<dynamic>(Routes.takePictureView,
+        arguments: TakePictureViewArguments(camera: camera, key: key),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
   Future<dynamic> replaceWithHomeView([
     int? routerId,
     bool preventDuplicates = true,
@@ -193,6 +283,37 @@ extension NavigatorStateExtension on _i7.NavigationService {
         transition,
   ]) async {
     return replaceWith<dynamic>(Routes.objectDetectionView,
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> replaceWithCurrencyRecognitionView([
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  ]) async {
+    return replaceWith<dynamic>(Routes.currencyRecognitionView,
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> replaceWithTakePictureView({
+    required _i9.CameraDescription camera,
+    _i8.Key? key,
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  }) async {
+    return replaceWith<dynamic>(Routes.takePictureView,
+        arguments: TakePictureViewArguments(camera: camera, key: key),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,

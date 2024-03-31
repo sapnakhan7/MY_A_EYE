@@ -7,6 +7,8 @@ import 'package:stacked_services/stacked_services.dart';
 import 'package:a_eye/ui/views/navigation/navigation_view.dart';
 import 'package:a_eye/ui/dialogs/number_settings/number_settings_dialog.dart';
 import 'package:a_eye/ui/views/object_detection/object_detection_view.dart';
+import 'package:a_eye/ui/views/currency_recognition/currency_recognition_view.dart';
+import 'package:a_eye/ui/views/currency_recognition/components/take_picture/take_picture_view.dart';
 // @stacked-import
 
 @StackedApp(
@@ -15,6 +17,8 @@ import 'package:a_eye/ui/views/object_detection/object_detection_view.dart';
     MaterialRoute(page: StartupView),
     MaterialRoute(page: NavigationView),
     MaterialRoute(page: ObjectDetectionView),
+    MaterialRoute(page: CurrencyRecognitionView),
+    MaterialRoute(page: TakePictureView),
 // @stacked-route
   ],
   dependencies: [
