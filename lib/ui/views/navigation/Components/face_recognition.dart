@@ -1,4 +1,5 @@
 import 'package:a_eye/ui/common/app_lotties.dart';
+import 'package:a_eye/ui/views/face_recognition/face_recognition_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:lottie/lottie.dart';
@@ -33,11 +34,10 @@ class _FaceRcgState extends State<FaceRcg> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: GestureDetector(
-        //TODO Navigate to Face Recognition Screen
         onTap: () => Navigator.of(context)
             .push(
           MaterialPageRoute(
-            builder: (_) => Container(),
+            builder: (_) => const FaceRecognitionView(),
           ),
         )
             .then(

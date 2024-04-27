@@ -9,16 +9,18 @@ import 'package:a_eye/ui/views/currency_recognition/components/take_picture/take
     as _i7;
 import 'package:a_eye/ui/views/currency_recognition/currency_recognition_view.dart'
     as _i6;
+import 'package:a_eye/ui/views/face_recognition/face_recognition_view.dart'
+    as _i8;
 import 'package:a_eye/ui/views/home/home_view.dart' as _i2;
 import 'package:a_eye/ui/views/navigation/navigation_view.dart' as _i4;
 import 'package:a_eye/ui/views/object_detection/object_detection_view.dart'
     as _i5;
 import 'package:a_eye/ui/views/startup/startup_view.dart' as _i3;
-import 'package:camera/camera.dart' as _i9;
-import 'package:flutter/material.dart' as _i8;
+import 'package:camera/camera.dart' as _i10;
+import 'package:flutter/material.dart' as _i9;
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart' as _i1;
-import 'package:stacked_services/stacked_services.dart' as _i10;
+import 'package:stacked_services/stacked_services.dart' as _i11;
 
 class Routes {
   static const homeView = '/home-view';
@@ -33,6 +35,8 @@ class Routes {
 
   static const takePictureView = '/take-picture-view';
 
+  static const faceRecognitionView = '/face-recognition-view';
+
   static const all = <String>{
     homeView,
     startupView,
@@ -40,6 +44,7 @@ class Routes {
     objectDetectionView,
     currencyRecognitionView,
     takePictureView,
+    faceRecognitionView,
   };
 }
 
@@ -69,43 +74,53 @@ class StackedRouter extends _i1.RouterBase {
       Routes.takePictureView,
       page: _i7.TakePictureView,
     ),
+    _i1.RouteDef(
+      Routes.faceRecognitionView,
+      page: _i8.FaceRecognitionView,
+    ),
   ];
 
   final _pagesMap = <Type, _i1.StackedRouteFactory>{
     _i2.HomeView: (data) {
-      return _i8.MaterialPageRoute<dynamic>(
+      return _i9.MaterialPageRoute<dynamic>(
         builder: (context) => const _i2.HomeView(),
         settings: data,
       );
     },
     _i3.StartupView: (data) {
-      return _i8.MaterialPageRoute<dynamic>(
+      return _i9.MaterialPageRoute<dynamic>(
         builder: (context) => const _i3.StartupView(),
         settings: data,
       );
     },
     _i4.NavigationView: (data) {
-      return _i8.MaterialPageRoute<dynamic>(
+      return _i9.MaterialPageRoute<dynamic>(
         builder: (context) => const _i4.NavigationView(),
         settings: data,
       );
     },
     _i5.ObjectDetectionView: (data) {
-      return _i8.MaterialPageRoute<dynamic>(
+      return _i9.MaterialPageRoute<dynamic>(
         builder: (context) => const _i5.ObjectDetectionView(),
         settings: data,
       );
     },
     _i6.CurrencyRecognitionView: (data) {
-      return _i8.MaterialPageRoute<dynamic>(
+      return _i9.MaterialPageRoute<dynamic>(
         builder: (context) => const _i6.CurrencyRecognitionView(),
         settings: data,
       );
     },
     _i7.TakePictureView: (data) {
       final args = data.getArgs<TakePictureViewArguments>(nullOk: false);
-      return _i8.MaterialPageRoute<dynamic>(
+      return _i9.MaterialPageRoute<dynamic>(
         builder: (context) => _i7.TakePictureView(args.camera, key: args.key),
+        settings: data,
+      );
+    },
+    _i8.FaceRecognitionView: (data) {
+      return _i9.MaterialPageRoute<dynamic>(
+        builder: (context) => const _i8.FaceRecognitionView(),
         settings: data,
       );
     },
@@ -124,9 +139,9 @@ class TakePictureViewArguments {
     this.key,
   });
 
-  final _i9.CameraDescription camera;
+  final _i10.CameraDescription camera;
 
-  final _i8.Key? key;
+  final _i9.Key? key;
 
   @override
   String toString() {
@@ -145,7 +160,7 @@ class TakePictureViewArguments {
   }
 }
 
-extension NavigatorStateExtension on _i10.NavigationService {
+extension NavigatorStateExtension on _i11.NavigationService {
   Future<dynamic> navigateToHomeView([
     int? routerId,
     bool preventDuplicates = true,
@@ -217,8 +232,8 @@ extension NavigatorStateExtension on _i10.NavigationService {
   }
 
   Future<dynamic> navigateToTakePictureView({
-    required _i9.CameraDescription camera,
-    _i8.Key? key,
+    required _i10.CameraDescription camera,
+    _i9.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -227,6 +242,20 @@ extension NavigatorStateExtension on _i10.NavigationService {
   }) async {
     return navigateTo<dynamic>(Routes.takePictureView,
         arguments: TakePictureViewArguments(camera: camera, key: key),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> navigateToFaceRecognitionView([
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  ]) async {
+    return navigateTo<dynamic>(Routes.faceRecognitionView,
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
@@ -304,8 +333,8 @@ extension NavigatorStateExtension on _i10.NavigationService {
   }
 
   Future<dynamic> replaceWithTakePictureView({
-    required _i9.CameraDescription camera,
-    _i8.Key? key,
+    required _i10.CameraDescription camera,
+    _i9.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -314,6 +343,20 @@ extension NavigatorStateExtension on _i10.NavigationService {
   }) async {
     return replaceWith<dynamic>(Routes.takePictureView,
         arguments: TakePictureViewArguments(camera: camera, key: key),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> replaceWithFaceRecognitionView([
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  ]) async {
+    return replaceWith<dynamic>(Routes.faceRecognitionView,
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,

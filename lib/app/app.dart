@@ -9,6 +9,9 @@ import 'package:a_eye/ui/dialogs/number_settings/number_settings_dialog.dart';
 import 'package:a_eye/ui/views/object_detection/object_detection_view.dart';
 import 'package:a_eye/ui/views/currency_recognition/currency_recognition_view.dart';
 import 'package:a_eye/ui/views/currency_recognition/components/take_picture/take_picture_view.dart';
+import 'package:a_eye/ui/views/face_recognition/face_recognition_view.dart';
+import 'package:a_eye/ui/dialogs/add_face/add_face_dialog.dart';
+import 'package:a_eye/ui/dialogs/view_labels/view_labels_dialog.dart';
 // @stacked-import
 
 @StackedApp(
@@ -19,6 +22,7 @@ import 'package:a_eye/ui/views/currency_recognition/components/take_picture/take
     MaterialRoute(page: ObjectDetectionView),
     MaterialRoute(page: CurrencyRecognitionView),
     MaterialRoute(page: TakePictureView),
+    MaterialRoute(page: FaceRecognitionView),
 // @stacked-route
   ],
   dependencies: [
@@ -34,6 +38,8 @@ import 'package:a_eye/ui/views/currency_recognition/components/take_picture/take
   dialogs: [
     StackedDialog(classType: InfoAlertDialog),
     StackedDialog(classType: NumberSettingsDialog),
+    StackedDialog(classType: AddFaceDialog),
+    StackedDialog(classType: ViewLabelsDialog),
 // @stacked-dialog
   ],
   logger: StackedLogger(),
