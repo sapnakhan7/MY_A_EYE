@@ -60,7 +60,7 @@ class FaceRecognitionViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  onInit() {
+  onInit() async {
     _initializeCamera();
     speak();
   }
@@ -73,20 +73,24 @@ class FaceRecognitionViewModel extends BaseViewModel {
 
   Future loadModel() async {
     try {
-      // final gpuDelegateV2 = tfl.GpuDelegateV2(
-      //     options: tfl.GpuDelegateOptionsV2(
-      //   isPrecisionLossAllowed: false,
-      //   inferencePreference: tfl.TfLiteGpuInferenceUsage.fastSingleAnswer,
-      //   inferencePriority1: tfl.TfLiteGpuInferencePriority.minLatency,
-      //   inferencePriority2: tfl.TfLiteGpuInferencePriority.auto,
-      //   inferencePriority3: tfl.TfLiteGpuInferencePriority.auto,
-      // ));
+      tfl.InterpreterOptions? interpreterOptions;
+      if (Platform.isAndroid) {
+        final gpuDelegateV2 = tfl.GpuDelegateV2(
+            options: tfl.GpuDelegateOptionsV2(
+          isPrecisionLossAllowed: false,
+          inferencePreference: tfl.TfLiteGpuInferenceUsage.fastSingleAnswer,
+          inferencePriority1: tfl.TfLiteGpuInferencePriority.minLatency,
+          inferencePriority2: tfl.TfLiteGpuInferencePriority.auto,
+          inferencePriority3: tfl.TfLiteGpuInferencePriority.auto,
+        ));
 
-      // var interpreterOptions = tfl.InterpreterOptions()
-      //   ..addDelegate(gpuDelegateV2);
+        interpreterOptions = tfl.InterpreterOptions()
+          ..addDelegate(gpuDelegateV2);
+      }
+
       interpreter = await tfl.Interpreter.fromAsset(
         'mobilefacenet.tflite',
-        //options: interpreterOptions
+        options: interpreterOptions,
       );
     } on Exception {
       logger.e('Failed to load model.');
@@ -94,7 +98,7 @@ class FaceRecognitionViewModel extends BaseViewModel {
   }
 
   Future<List<Face>> detect(CameraImage image, InputImageRotation rotation) {
-    InputImage? inputImage = _inputImageFromCameraImage(image);
+    //InputImage? inputImage = _inputImageFromCameraImage(image);
 
     final faceDetector = FaceDetector(
       options: FaceDetectorOptions(
@@ -105,62 +109,93 @@ class FaceRecognitionViewModel extends BaseViewModel {
       ),
     );
 
-    if (inputImage == null) return Future.value([]);
+    final WriteBuffer allBytes = WriteBuffer();
+    for (final Plane plane in image.planes) {
+      allBytes.putUint8List(plane.bytes);
+    }
+    final bytes = allBytes.done().buffer.asUint8List();
+
+    final Size imageSize =
+        Size(image.width.toDouble(), image.height.toDouble());
+    final inputImageFormat =
+        InputImageFormatValue.fromRawValue(image.format.raw) ??
+            InputImageFormat.nv21;
+    final planeData = image.planes.map(
+      (Plane plane) {
+        return InputImagePlaneMetadata(
+          bytesPerRow: plane.bytesPerRow,
+          height: plane.height,
+          width: plane.width,
+        );
+      },
+    ).toList();
+
+    final inputImageData = InputImageData(
+      size: imageSize,
+      imageRotation: rotation,
+      inputImageFormat: inputImageFormat,
+      planeData: planeData,
+    );
+
+    final inputImage =
+        InputImage.fromBytes(bytes: bytes, inputImageData: inputImageData);
+
+    //if (inputImage == null) return Future.value([]);
 
     return faceDetector.processImage(
       inputImage,
     );
   }
 
-  InputImage? _inputImageFromCameraImage(CameraImage image) {
-    // get image rotation
-    // it is used in android to convert the InputImage from Dart to Java
-    // `rotation` is not used in iOS to convert the InputImage from Dart to Obj-C
-    // in both platforms `rotation` and `camera.lensDirection` can be used to compensate `x` and `y` coordinates on a canvas
-    final sensorOrientation = description.sensorOrientation;
-    InputImageRotation? rotation;
-    if (Platform.isIOS) {
-      rotation = InputImageRotationValue.fromRawValue(sensorOrientation);
-    } else if (Platform.isAndroid) {
-      var rotationCompensation = _orientations[camera!.value.deviceOrientation];
-      if (rotationCompensation == null) return null;
-      if (direction == CameraLensDirection.front) {
-        // front-facing
-        rotationCompensation = (sensorOrientation + rotationCompensation) % 360;
-      } else {
-        // back-facing
-        rotationCompensation =
-            (sensorOrientation - rotationCompensation + 360) % 360;
-      }
-      rotation = InputImageRotationValue.fromRawValue(rotationCompensation);
-    }
-    if (rotation == null) return null;
+  // InputImage? _inputImageFromCameraImage(CameraImage image) {
+  //   // get image rotation
+  //   // it is used in android to convert the InputImage from Dart to Java
+  //   // `rotation` is not used in iOS to convert the InputImage from Dart to Obj-C
+  //   // in both platforms `rotation` and `camera.lensDirection` can be used to compensate `x` and `y` coordinates on a canvas
+  //   final sensorOrientation = description.sensorOrientation;
+  //   InputImageRotation? rotation;
+  //   if (Platform.isIOS) {
+  //     rotation = InputImageRotationValue.fromRawValue(sensorOrientation);
+  //   } else if (Platform.isAndroid) {
+  //     var rotationCompensation = _orientations[camera!.value.deviceOrientation];
+  //     if (rotationCompensation == null) return null;
+  //     if (direction == CameraLensDirection.front) {
+  //       // front-facing
+  //       rotationCompensation = (sensorOrientation + rotationCompensation) % 360;
+  //     } else {
+  //       // back-facing
+  //       rotationCompensation =
+  //           (sensorOrientation - rotationCompensation + 360) % 360;
+  //     }
+  //     rotation = InputImageRotationValue.fromRawValue(rotationCompensation);
+  //   }
+  //   if (rotation == null) return null;
 
-    // get image format
-    final format = InputImageFormatValue.fromRawValue(image.format.raw);
-    // validate format depending on platform
-    // only supported formats:
-    // * nv21 for Android
-    // * bgra8888 for iOS
-    if (format == null ||
-        (Platform.isAndroid && format != InputImageFormat.nv21) ||
-        (Platform.isIOS && format != InputImageFormat.bgra8888)) return null;
+  //   // get image format
+  //   final format = InputImageFormatValue.fromRawValue(image.format.raw);
+  //   // validate format depending on platform
+  //   // only supported formats:
+  //   // * nv21 for Android
+  //   // * bgra8888 for iOS
+  //   if (format == null ||
+  //       (Platform.isAndroid && format != InputImageFormat.nv21) ||
+  //       (Platform.isIOS && format != InputImageFormat.bgra8888)) return null;
 
-    // since format is constraint to nv21 or bgra8888, both only have one plane
-    if (image.planes.length != 1) return null;
-    final plane = image.planes.first;
+  //   // since format is constraint to nv21 or bgra8888, both only have one plane
+  //   if (image.planes.length != 1) return null;
+  //   final plane = image.planes.first;
 
-    // compose InputImage using bytes
-    return InputImage.fromBytes(
-      bytes: plane.bytes,
-      metadata: InputImageMetadata(
-        size: Size(image.width.toDouble(), image.height.toDouble()),
-        rotation: rotation, // used only in Android
-        format: format, // used only in iOS
-        bytesPerRow: plane.bytesPerRow, // used only in iOS
-      ),
-    );
-  }
+  //   // compose InputImage using bytes
+  //   return InputImage.fromBytes(
+  //     bytes: plane.bytes,
+  //     metadata: InputImageMetadata(
+  //       size: Size(image.width.toDouble(), image.height.toDouble()),
+  //       rotation: rotation, // used only in Android
+  //       format: format, // used only in iOS
+  //       bytesPerRow: plane.bytesPerRow, // used only in iOS
+  //     ),
+  //   );
+  // }
 
   void _initializeCamera() async {
     CameraDescription description = await getCamera(_direction);
@@ -174,9 +209,6 @@ class FaceRecognitionViewModel extends BaseViewModel {
       description,
       ResolutionPreset.ultraHigh,
       enableAudio: false,
-      imageFormatGroup: Platform.isAndroid
-          ? ImageFormatGroup.nv21 // for Android
-          : ImageFormatGroup.bgra8888, // for iOS
     );
     await _camera?.initialize();
     await loadModel();
@@ -214,10 +246,9 @@ class FaceRecognitionViewModel extends BaseViewModel {
           imglib.Image croppedImage = imglib.copyCrop(
               convertedImage, x.round(), y.round(), w.round(), h.round());
           croppedImage = imglib.copyResizeCropSquare(croppedImage, 112);
-          // int startTime = new DateTime.now().millisecondsSinceEpoch;
+
           res = _recog(croppedImage);
-          // int endTime = new DateTime.now().millisecondsSinceEpoch;
-          // print("Inference took ${endTime - startTime}ms");
+
           finalResult.add(res, face);
         }
         scanResults = finalResult;

@@ -78,6 +78,7 @@ class _CameraViewState extends State<CameraView> {
     if (_controller?.value.isInitialized == false) return Container();
     return Container(
       color: Colors.black,
+      height: double.infinity,
       child: Stack(
         fit: StackFit.expand,
         children: <Widget>[
@@ -91,10 +92,10 @@ class _CameraViewState extends State<CameraView> {
                     child: widget.customPaint,
                   ),
           ),
-          _backButton(),
-          _switchLiveCameraToggle(),
-          _detectionViewModeToggle(),
-          _zoomControl(),
+          // _backButton(),
+          // _switchLiveCameraToggle(),
+          // _detectionViewModeToggle(),
+          // _zoomControl(),
           _exposureControl(),
         ],
       ),
@@ -370,15 +371,50 @@ class _CameraViewState extends State<CameraView> {
     if (image.planes.length != 1) return null;
     final plane = image.planes.first;
 
-    // compose InputImage using bytes
-    return InputImage.fromBytes(
-      bytes: plane.bytes,
-      metadata: InputImageMetadata(
-        size: Size(image.width.toDouble(), image.height.toDouble()),
-        rotation: rotation, // used only in Android
-        format: format, // used only in iOS
-        bytesPerRow: plane.bytesPerRow, // used only in iOS
-      ),
+    final WriteBuffer allBytes = WriteBuffer();
+    for (final Plane plane in image.planes) {
+      allBytes.putUint8List(plane.bytes);
+    }
+    final bytes = allBytes.done().buffer.asUint8List();
+
+    final Size imageSize =
+        Size(image.width.toDouble(), image.height.toDouble());
+    final inputImageFormat =
+        InputImageFormatValue.fromRawValue(image.format.raw) ??
+            InputImageFormat.nv21;
+    final planeData = image.planes.map(
+      (Plane plane) {
+        return InputImagePlaneMetadata(
+          bytesPerRow: plane.bytesPerRow,
+          height: plane.height,
+          width: plane.width,
+        );
+      },
+    ).toList();
+
+    final inputImageData = InputImageData(
+      size: imageSize,
+      imageRotation: rotation,
+      inputImageFormat: inputImageFormat,
+      planeData: planeData,
     );
+
+    final inputImage =
+        InputImage.fromBytes(bytes: bytes, inputImageData: inputImageData);
+
+    // if (inputImage == null) return Future.value([]);
+
+    return inputImage;
+
+    // compose InputImage using bytes
+    // return InputImage.fromBytes(
+    //   bytes: plane.bytes,
+    //   metadata: InputImageMetadata(
+    //     size: Size(image.width.toDouble(), image.height.toDouble()),
+    //     rotation: rotation, // used only in Android
+    //     format: format, // used only in iOS
+    //     bytesPerRow: plane.bytesPerRow, // used only in iOS
+    //   ),
+    // );
   }
 }

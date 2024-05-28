@@ -14,9 +14,9 @@ dependencies:
   path_provider: ^2.1.2
   tflite_flutter: ^0.9.5
   tuple: ^2.0.2
-  camera: ^0.9.4+5
+  camera: ^0.10.5+9
   ffi: ^2.1.2
-  image: ^3.3.0
+  image: 3.2.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

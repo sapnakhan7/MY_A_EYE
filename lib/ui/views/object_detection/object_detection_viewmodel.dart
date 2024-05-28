@@ -14,6 +14,8 @@ class ObjectDetectionViewModel extends BaseViewModel {
   final FlutterTts flutterTts = FlutterTts();
 
   ObjectDetector? _objectDetector;
+  DateTime lastDetectionTime = DateTime(1998);
+  bool isSpeaking = false;
   DetectionMode _mode = DetectionMode.stream;
   bool _canProcess = false;
   bool _isBusy = false;
@@ -83,10 +85,12 @@ class ObjectDetectionViewModel extends BaseViewModel {
     //await flutterTts.setSpeechRate(0);
     await flutterTts
         .setVoice({"name": "en-gb-x-gbb-network", "locale": "en-GB"});
-    // await flutterTts.awaitSpeakCompletion(false);
-    // await flutterTts.speak(
-    //     "Object Detection Started. Press and hold anywhere to exit Object Detection.");
-    //await flutterTts.speak("Swipe left for face recognition");
+    await flutterTts.awaitSpeakCompletion(true);
+    isSpeaking = true;
+    await flutterTts.speak(
+        "Object Detection Started. Press and hold anywhere to exit Object Detection.");
+    await flutterTts.awaitSpeakCompletion(false);
+    isSpeaking = false;
   }
 
   void initializeDetector() async {
@@ -145,12 +149,12 @@ class ObjectDetectionViewModel extends BaseViewModel {
     text = '';
     final objects = await _objectDetector!.processImage(inputImage);
 
-    if (inputImage.metadata?.size != null &&
-        inputImage.metadata?.rotation != null) {
+    if (inputImage.inputImageData?.size != null &&
+        inputImage.inputImageData?.imageRotation != null) {
       final painter = ObjectDetectorPainter(
         objects,
-        inputImage.metadata!.size,
-        inputImage.metadata!.rotation,
+        inputImage.inputImageData!.size,
+        inputImage.inputImageData!.imageRotation,
         cameraLensDirection,
       );
       _customPaint = CustomPaint(painter: painter);
@@ -168,7 +172,19 @@ class ObjectDetectionViewModel extends BaseViewModel {
     _isBusy = false;
     notifyListeners();
 
-    // flutterTts.speak(objects.firstOrNull?.labels.firstOrNull?.text ?? "");
+    if (isSpeaking ||
+        DateTime.now().difference(lastDetectionTime).inSeconds < 5) return;
+
+    lastDetectionTime = DateTime.now();
+    isSpeaking = true;
+    objects.forEach((object) async {
+      if (object.labels.isNotEmpty) {
+        final label =
+            object.labels.reduce((a, b) => a.confidence > b.confidence ? a : b);
+        await flutterTts.speak(label.text);
+      }
+    });
+    isSpeaking = false;
   }
 
   @override
