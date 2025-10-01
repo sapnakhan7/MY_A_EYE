@@ -20,11 +20,14 @@ class TensorBufferContainer implements BaseImageContainer {
   ///
   /// @throws IllegalArgumentException if the shape of the {@link TensorBuffer} does not match the
   ///     specified color space type, or if the color space type is not supported
-  static TensorBufferContainer create(TensorBuffer buffer, ColorSpaceType colorSpaceType) {
+  static TensorBufferContainer create(
+      TensorBuffer buffer, ColorSpaceType colorSpaceType) {
     checkArgument(
-        colorSpaceType == ColorSpaceType.RGB || colorSpaceType == ColorSpaceType.GRAYSCALE,
-        message: "Only ColorSpaceType.RGB and ColorSpaceType.GRAYSCALE are supported. Use"
-            + " `create(TensorBuffer, ImageProperties)` for other color space types.");
+        colorSpaceType == ColorSpaceType.RGB ||
+            colorSpaceType == ColorSpaceType.GRAYSCALE,
+        message:
+            "Only ColorSpaceType.RGB and ColorSpaceType.GRAYSCALE are supported. Use" +
+                " `create(TensorBuffer, ImageProperties)` for other color space types.");
 
     return TensorBufferContainer._(
         buffer,
@@ -33,12 +36,12 @@ class TensorBufferContainer implements BaseImageContainer {
         colorSpaceType.getWidth(buffer.getShape()));
   }
 
-  TensorBufferContainer._(
-      TensorBuffer buffer, ColorSpaceType colorSpaceType, int height, int width) {
-    checkArgument(
-        colorSpaceType != ColorSpaceType.YUV_420_888,
-        message: "The actual encoding format of YUV420 is required. Choose a ColorSpaceType from: NV12,"
-            + " NV21, YV12, YV21. Use YUV_420_888 only when loading an android.media.Image.");
+  TensorBufferContainer._(TensorBuffer buffer, ColorSpaceType colorSpaceType,
+      int height, int width) {
+    checkArgument(colorSpaceType != ColorSpaceType.YUV_420_888,
+        message:
+            "The actual encoding format of YUV420 is required. Choose a ColorSpaceType from: NV12," +
+                " NV21, YV12, YV21. Use YUV_420_888 only when loading an android.media.Image.");
 
     colorSpaceType.assertNumElements(buffer.getFlatSize(), height, width);
     this._buffer = buffer;
@@ -77,7 +80,9 @@ class TensorBufferContainer implements BaseImageContainer {
     // performance considerations. During image processing, users may need to set and get the
     // TensorBuffer many times.
     // Otherwise, create another one with the expected data type.
-    return _buffer.getDataType() == dataType ? _buffer : TensorBuffer.createFrom(_buffer, dataType);
+    return _buffer.getDataType() == dataType
+        ? _buffer
+        : TensorBuffer.createFrom(_buffer, dataType);
   }
 
   @override
@@ -104,5 +109,4 @@ class TensorBufferContainer implements BaseImageContainer {
   ColorSpaceType get colorSpaceType {
     return _colorSpaceType;
   }
-
 }

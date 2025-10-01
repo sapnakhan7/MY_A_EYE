@@ -26,7 +26,6 @@ class SoundStream {
   /// Return [RecorderStream] instance (Singleton).
   RecorderStream get recorder => RecorderStream();
 
-
   Future<dynamic> _onMethodCall(MethodCall call) async {
     switch (call.method) {
       case "platformEvent":

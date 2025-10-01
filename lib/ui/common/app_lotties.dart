@@ -1,6 +1,5 @@
 class AppLotties {
-  static const String objectDetection = 'assets/objectDtc.json';
-  static const String currencyRecognition =
-      'assets/55607-flying-wallet-money.json';
-  static const String faceRecognition = 'assets/faceRcg.json';
+  static const String objectDetection = 'assets/searching.json';
+  static const String currencyRecognition ='assets/currency.wallet.json';
+  static const String faceRecognition = 'assets/face.id.json';
 }

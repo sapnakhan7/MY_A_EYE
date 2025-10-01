@@ -16,7 +16,8 @@ class BertNLClassifierOptions {
 
   /// Creates a new options instance.
   factory BertNLClassifierOptions() {
-    final optionsPtr = TfLiteBertNLClassifierOptions.allocate(DEFAULT_MAX_SEQ_LEN);
+    final optionsPtr =
+        TfLiteBertNLClassifierOptions.allocate(DEFAULT_MAX_SEQ_LEN);
     return BertNLClassifierOptions._(optionsPtr);
   }
 

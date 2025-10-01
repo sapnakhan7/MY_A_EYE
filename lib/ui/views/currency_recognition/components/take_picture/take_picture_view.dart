@@ -25,7 +25,10 @@ class TakePictureView extends StackedView<TakePictureViewModel> {
             // If the Future is complete, display the preview.
             return GestureDetector(
               onTap: viewModel.onTap,
-              child: CameraPreview(viewModel.controller!),
+              child: SizedBox(
+                height: double.maxFinite,
+                child: CameraPreview(viewModel.controller!),
+              ),
             );
           } else {
             // Otherwise, display a loading indicator.

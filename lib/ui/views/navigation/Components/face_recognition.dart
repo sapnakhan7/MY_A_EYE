@@ -21,7 +21,7 @@ class _FaceRcgState extends State<FaceRcg> {
         .setVoice({"name": "en-gb-x-gbb-network", "locale": "en-GB"});
     await flutterTts.awaitSpeakCompletion(false);
     await flutterTts.speak(
-        "Face recognition Screen. Tap anywhere to start recognizing or swipe right for currency recognition.");
+        "Face recognition Screen. Tap anywhere to start recognizing or swipe left for text recognition.");
   }
 
   @override

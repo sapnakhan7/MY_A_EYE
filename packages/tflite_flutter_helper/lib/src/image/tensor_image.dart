@@ -171,7 +171,7 @@ class TensorImage {
   /// It's essentially a short cut for [getTensorBuffer.getBuffer()].
   ///
   /// Throws [StateError] if the TensorImage never loads data.
-  ByteBuffer get buffer {    
+  ByteBuffer get buffer {
     return tensorBuffer.buffer;
   }
 

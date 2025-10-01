@@ -9,7 +9,7 @@ class RecorderStream {
   final _audioStreamController = StreamController<Uint8List>.broadcast();
 
   final _recorderStatusController =
-  StreamController<SoundStreamStatus>.broadcast();
+      StreamController<SoundStreamStatus>.broadcast();
 
   RecorderStream._internal() {
     SoundStream();
@@ -45,14 +45,13 @@ class RecorderStream {
     final String eventName = event["name"] ?? "";
     switch (eventName) {
       case "dataPeriod":
-        final Uint8List audioData =
-            Uint8List.fromList(event["data"] ?? []);
+        final Uint8List audioData = Uint8List.fromList(event["data"] ?? []);
         if (audioData.isNotEmpty) _audioStreamController.add(audioData);
         break;
       case "recorderStatus":
         final String status = event["data"] ?? "Unset";
         _recorderStatusController.add(SoundStreamStatus.values.firstWhere(
-              (value) => enumToString(value) == status,
+          (value) => enumToString(value) == status,
           orElse: () => SoundStreamStatus.Unset,
         ));
         break;

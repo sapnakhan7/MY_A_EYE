@@ -10,38 +10,47 @@ import 'package:tflite_flutter_helper/src/task/bindings/dlib.dart';
 // Creates BertQuestionAnswerer from model path, returns nullptr if the file
 // doesn't exist or is not a well formatted TFLite model path.
 Pointer<TfLiteBertQuestionAnswerer> Function(Pointer<Utf8> modelPath)
-BertQuestionAnswererFromFile = tflitelib
-    .lookup<NativeFunction<_BertQuestionAnswererFromFile_native_t>>(
-    'BertQuestionAnswererFromFile')
-    .asFunction();
+    BertQuestionAnswererFromFile = tflitelib
+        .lookup<NativeFunction<_BertQuestionAnswererFromFile_native_t>>(
+            'BertQuestionAnswererFromFile')
+        .asFunction();
 
-typedef _BertQuestionAnswererFromFile_native_t = Pointer<TfLiteBertQuestionAnswerer> Function(
-    Pointer<Utf8> modelPath);
+typedef _BertQuestionAnswererFromFile_native_t
+    = Pointer<TfLiteBertQuestionAnswerer> Function(Pointer<Utf8> modelPath);
 
 // Invokes the encapsulated TFLite model and answers a question based on
 // context.
-Pointer<TfLiteQaAnswers> Function(Pointer<TfLiteBertQuestionAnswerer> questionAnswerer,
-    Pointer<Utf8> context, Pointer<Utf8> question)
-BertQuestionAnswererAnswer = tflitelib
-    .lookup<NativeFunction<_BertQuestionAnswererAnswer_native_t>>(
-    'BertQuestionAnswererAnswer')
-    .asFunction();
+Pointer<TfLiteQaAnswers> Function(
+        Pointer<TfLiteBertQuestionAnswerer> questionAnswerer,
+        Pointer<Utf8> context,
+        Pointer<Utf8> question) BertQuestionAnswererAnswer =
+    tflitelib
+        .lookup<NativeFunction<_BertQuestionAnswererAnswer_native_t>>(
+            'BertQuestionAnswererAnswer')
+        .asFunction();
 
-typedef _BertQuestionAnswererAnswer_native_t = Pointer<TfLiteQaAnswers> Function(Pointer<TfLiteBertQuestionAnswerer> questionAnswerer,
-    Pointer<Utf8> context, Pointer<Utf8> question);
+typedef _BertQuestionAnswererAnswer_native_t
+    = Pointer<TfLiteQaAnswers> Function(
+        Pointer<TfLiteBertQuestionAnswerer> questionAnswerer,
+        Pointer<Utf8> context,
+        Pointer<Utf8> question);
 
 // Deletes BertQuestionAnswerer instance
-void Function(Pointer<TfLiteBertQuestionAnswerer>) BertQuestionAnswererDelete = tflitelib
-    .lookup<NativeFunction<_BertQuestionAnswererDelete_native_t>>(
-    'BertQuestionAnswererDelete')
-    .asFunction();
+void Function(Pointer<TfLiteBertQuestionAnswerer>) BertQuestionAnswererDelete =
+    tflitelib
+        .lookup<NativeFunction<_BertQuestionAnswererDelete_native_t>>(
+            'BertQuestionAnswererDelete')
+        .asFunction();
 
-typedef _BertQuestionAnswererDelete_native_t = Void Function(Pointer<TfLiteBertQuestionAnswerer>);
+typedef _BertQuestionAnswererDelete_native_t = Void Function(
+    Pointer<TfLiteBertQuestionAnswerer>);
 
 // Deletes BertQuestionAnswererQaAnswers instance
-void Function(Pointer<TfLiteQaAnswers>) BertQuestionAnswererQaAnswersDelete = tflitelib
-    .lookup<NativeFunction<_BertQuestionAnswererQaAnswersDelete_native_t>>(
-    'BertQuestionAnswererQaAnswersDelete')
-    .asFunction();
+void Function(Pointer<TfLiteQaAnswers>) BertQuestionAnswererQaAnswersDelete =
+    tflitelib
+        .lookup<NativeFunction<_BertQuestionAnswererQaAnswersDelete_native_t>>(
+            'BertQuestionAnswererQaAnswersDelete')
+        .asFunction();
 
-typedef _BertQuestionAnswererQaAnswersDelete_native_t = Void Function(Pointer<TfLiteQaAnswers>);
+typedef _BertQuestionAnswererQaAnswersDelete_native_t = Void Function(
+    Pointer<TfLiteQaAnswers>);

@@ -16,7 +16,7 @@ class AppTheme {
       error: AppColors.errorColor,
       errorContainer: AppColors.errorColor,
       primary: AppColors.primaryColor,
-      //secondary: AppColors.secondaryColor,
+      // secondary: AppColors.secondaryColor,
     ),
     scaffoldBackgroundColor: AppColors.backgoundColorLight,
     // buttonTheme: ButtonThemeData(

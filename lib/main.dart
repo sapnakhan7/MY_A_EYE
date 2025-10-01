@@ -28,7 +28,7 @@ class MainApp extends StatelessWidget {
       builder: (context, _) {
         return MaterialApp(
           initialRoute: Routes.startupView,
-          theme: AppTheme.darkTheme,
+          theme: AppTheme.lightTheme,
           themeMode: ThemeMode.dark,
           onGenerateRoute: StackedRouter().onGenerateRoute,
           navigatorKey: StackedService.navigatorKey,

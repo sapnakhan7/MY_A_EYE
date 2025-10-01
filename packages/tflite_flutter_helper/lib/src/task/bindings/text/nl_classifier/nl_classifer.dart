@@ -9,32 +9,32 @@ import 'package:tflite_flutter_helper/src/task/bindings/dlib.dart';
 
 // Creates NLClassifier from model path and options, returns nullptr if the file
 // doesn't exist or is not a well formatted TFLite model path.
-Pointer<TfLiteNLClassifier> Function(Pointer<Utf8> modelPath,
-    Pointer<TfLiteNLClassifierOptions> options)
-NLClassifierFromFileAndOptions = tflitelib
-    .lookup<NativeFunction<_NLClassifierFromFileAndOptions_native_t>>(
-    'NLClassifierFromFileAndOptions')
-    .asFunction();
+Pointer<TfLiteNLClassifier> Function(
+        Pointer<Utf8> modelPath, Pointer<TfLiteNLClassifierOptions> options)
+    NLClassifierFromFileAndOptions = tflitelib
+        .lookup<NativeFunction<_NLClassifierFromFileAndOptions_native_t>>(
+            'NLClassifierFromFileAndOptions')
+        .asFunction();
 
-typedef _NLClassifierFromFileAndOptions_native_t = Pointer<TfLiteNLClassifier> Function(
-    Pointer<Utf8> modelPath,
-    Pointer<TfLiteNLClassifierOptions> options);
+typedef _NLClassifierFromFileAndOptions_native_t
+    = Pointer<TfLiteNLClassifier> Function(
+        Pointer<Utf8> modelPath, Pointer<TfLiteNLClassifierOptions> options);
 
 // Invokes the encapsulated TFLite model and classifies the input text.
-Pointer<TfLiteCategories> Function(Pointer<TfLiteNLClassifier> classifier,
-    Pointer<Utf8> text)
-NLClassifierClassify = tflitelib
-    .lookup<NativeFunction<_NLClassifierClassify_native_t>>(
-    'NLClassifierClassify')
-    .asFunction();
+Pointer<TfLiteCategories> Function(
+        Pointer<TfLiteNLClassifier> classifier, Pointer<Utf8> text)
+    NLClassifierClassify = tflitelib
+        .lookup<NativeFunction<_NLClassifierClassify_native_t>>(
+            'NLClassifierClassify')
+        .asFunction();
 
-typedef _NLClassifierClassify_native_t = Pointer<TfLiteCategories> Function(Pointer<TfLiteNLClassifier> classifier,
-    Pointer<Utf8> text);
+typedef _NLClassifierClassify_native_t = Pointer<TfLiteCategories> Function(
+    Pointer<TfLiteNLClassifier> classifier, Pointer<Utf8> text);
 
 // Deletes NLClassifer instance
 void Function(Pointer<TfLiteNLClassifier>) NLClassifierDelete = tflitelib
-    .lookup<NativeFunction<_NLClassifierDelete_native_t>>(
-    'NLClassifierDelete')
+    .lookup<NativeFunction<_NLClassifierDelete_native_t>>('NLClassifierDelete')
     .asFunction();
 
-typedef _NLClassifierDelete_native_t = Void Function(Pointer<TfLiteNLClassifier>);
+typedef _NLClassifierDelete_native_t = Void Function(
+    Pointer<TfLiteNLClassifier>);

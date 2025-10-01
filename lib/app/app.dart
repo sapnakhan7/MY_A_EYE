@@ -12,6 +12,7 @@ import 'package:a_eye/ui/views/currency_recognition/components/take_picture/take
 import 'package:a_eye/ui/views/face_recognition/face_recognition_view.dart';
 import 'package:a_eye/ui/dialogs/add_face/add_face_dialog.dart';
 import 'package:a_eye/ui/dialogs/view_labels/view_labels_dialog.dart';
+import 'package:a_eye/ui/views/text_recognition/text_recognition_view.dart';
 // @stacked-import
 
 @StackedApp(
@@ -23,6 +24,7 @@ import 'package:a_eye/ui/dialogs/view_labels/view_labels_dialog.dart';
     MaterialRoute(page: CurrencyRecognitionView),
     MaterialRoute(page: TakePictureView),
     MaterialRoute(page: FaceRecognitionView),
+    MaterialRoute(page: TextRecognitionView),
 // @stacked-route
   ],
   dependencies: [
