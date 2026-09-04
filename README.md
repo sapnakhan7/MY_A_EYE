@@ -28,10 +28,8 @@ A‑Eye is an intelligent application that integrates multiple AI models and ser
 ## 🛠️ Technology Stack
 
 - **Frontend:** Flutter (with Lottie animations for UI/UX enhancements)
-- **Backend:** Flask
 - **AI/ML Models:** YOLOv4, VGG19, Firebase ML Kit, Google ML Kit
 - **Datasets:** Kaggle datasets (trained and converted to TFLite)
-- **Cloud Services:** Firebase
 
 ---
 
